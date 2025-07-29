@@ -1,0 +1,217 @@
+{
+    "zabbix_export": {
+        "version": "5.4",
+        "date": "2025-07-29T22:07:16Z",
+        "groups": [
+            {
+                "uuid": "7df96b18c230490a9a0a9e2307226338",
+                "name": "Templates"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "e79d21b0b7884c11ba2784c2f83a2201",
+                "template": "BGP-Mikrotik-SNMP",
+                "name": "BGP-Mikrotik-SNMP",
+                "groups": [
+                    {
+                        "name": "Templates"
+                    }
+                ],
+                "items": [
+                    {
+                        "uuid": "ce1db7043ac340bbb1767cfbbf2d0dcd",
+                        "name": "Json",
+                        "type": "SNMP_AGENT",
+                        "snmp_oid": ".1.3.6.1.4.1.14988.1.1.18.1.1.2.1",
+                        "key": "json.run.script",
+                        "history": "30d",
+                        "trends": "0",
+                        "value_type": "TEXT"
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "uuid": "b63fa293ba584125a3f19fb7aa92e2cd",
+                        "name": "Discover-{#PEERNAME}",
+                        "type": "DEPENDENT",
+                        "key": "snmp.discover.[{#PEERNAME}]",
+                        "delay": "0",
+                        "lifetime": "5d",
+                        "item_prototypes": [
+                            {
+                                "uuid": "c3827eaec59b44c5b5fd3dc9dc0d68b1",
+                                "name": "ASN-{#PEERNAME}",
+                                "type": "DEPENDENT",
+                                "key": "snmp.as.[{#PEERNAME}]",
+                                "delay": "0",
+                                "history": "10d",
+                                "trends": "30d",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$.data[?(@['{$PEERJSON}']=='{#PEERNAME}')]['{$ASJSON}']"
+                                        ]
+                                    },
+                                    {
+                                        "type": "TRIM",
+                                        "parameters": [
+                                            "\"[]\""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "json.run.script"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "BGP",
+                                        "value": "asn"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "9190c3b736104da7ae369c7f19de390a",
+                                "name": "Peer-{#PEERNAME}",
+                                "type": "DEPENDENT",
+                                "key": "snmp.depend.[{#PEERNAME}]",
+                                "delay": "0",
+                                "history": "30d",
+                                "trends": "0",
+                                "value_type": "TEXT",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$.data[?(@['{$PEERJSON}']=='{#PEERNAME}')]['{$PEERJSON}']"
+                                        ]
+                                    },
+                                    {
+                                        "type": "TRIM",
+                                        "parameters": [
+                                            "[\"]"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "json.run.script"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "BGP",
+                                        "value": "peer"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "4639343d022547148a8c892cacb2ec61",
+                                "name": "Established-{#PEERNAME}",
+                                "type": "DEPENDENT",
+                                "key": "snmp.estabel.[{#PEERNAME}]",
+                                "delay": "0",
+                                "history": "30d",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$.data[?(@['{$PEERJSON}']=='{#PEERNAME}')]['{$ESTJSON}']"
+                                        ]
+                                    },
+                                    {
+                                        "type": "STR_REPLACE",
+                                        "parameters": [
+                                            "true",
+                                            "1"
+                                        ]
+                                    },
+                                    {
+                                        "type": "STR_REPLACE",
+                                        "parameters": [
+                                            "false",
+                                            "0"
+                                        ]
+                                    },
+                                    {
+                                        "type": "TRIM",
+                                        "parameters": [
+                                            "\"[]\""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "json.run.script"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "BGP",
+                                        "value": "estado"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "e8b3c2fde47f4509a18bdb8774408631",
+                                "name": "Prefix-{#PEERNAME}",
+                                "type": "DEPENDENT",
+                                "key": "snmp.prefix.[{#PEERNAME}]",
+                                "delay": "0",
+                                "history": "30d",
+                                "trends": "0",
+                                "value_type": "TEXT",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$.data[?(@['{$PEERJSON}']=='{#PEERNAME}')]['{$PREFIXJSON}']"
+                                        ]
+                                    },
+                                    {
+                                        "type": "TRIM",
+                                        "parameters": [
+                                            "\"[]\""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "json.run.script"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "BGP",
+                                        "value": "prefix"
+                                    }
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "json.run.script"
+                        }
+                    }
+                ],
+                "tags": [
+                    {
+                        "tag": "BGP"
+                    }
+                ],
+                "macros": [
+                    {
+                        "macro": "{$ASJSON}",
+                        "value": "{#REMOTEAS}"
+                    },
+                    {
+                        "macro": "{$ESTJSON}",
+                        "value": "{#ESTABEL}"
+                    },
+                    {
+                        "macro": "{$PEERJSON}",
+                        "value": "{#PEERNAME}"
+                    },
+                    {
+                        "macro": "{$PREFIXJSON}",
+                        "value": "{#PREFIX}"
+                    }
+                ]
+            }
+        ]
+    }
+}
